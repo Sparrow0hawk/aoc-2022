@@ -1,13 +1,12 @@
 use anyhow;
 use reqwest;
-use std::fs;
+use reqwest::blocking::Client;
 use std::env;
-use std::io;
-use std::{path::Path};
-use reqwest::blocking::{Client};
+use std::fs::{self, File};
+use std::io::{self, BufRead};
+use std::path::Path;
 
 pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
-
     let base_url = "https://adventofcode.com/2022/day/$TASK/input";
 
     let updated_url = base_url.replace("$TASK", &task.to_string());
@@ -22,7 +21,7 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
         let _ = fs::create_dir(data_dir)?;
     }
 
-    let mut dest =  {
+    let mut dest = {
         let mut fname = "task_".to_string();
 
         fname.push_str(&task.to_string());
@@ -36,13 +35,14 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
 
     let client = Client::new();
 
-    let content = client.get(updated_url)
-        .header("Cookie","session=$SESSION".replace("$SESSION", &env_var))
+    let content = client
+        .get(updated_url)
+        .header("Cookie", "session=$SESSION".replace("$SESSION", &env_var))
         .send()?;
 
     io::copy(&mut content.text()?.as_bytes(), &mut dest)?;
 
-    Ok(())   
+    Ok(())
 }
 
 pub fn solve_one() -> Result<i32, anyhow::Error> {
