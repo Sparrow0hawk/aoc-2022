@@ -45,3 +45,35 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
     Ok(())   
 }
 
+pub fn solve_one() -> Result<i32, anyhow::Error> {
+    let mut max_cal: i32 = 0;
+
+    let mut elf_cal = 0;
+
+    if let Ok(lines) = read_lines("data/task_1") {
+        for line in lines {
+            let line = line.unwrap();
+
+            if line.is_empty() {
+                if elf_cal > max_cal {
+                    max_cal = elf_cal;
+                }
+                elf_cal = 0;
+            } else {
+                let line_val = line.parse::<i32>().unwrap();
+
+                elf_cal = elf_cal + line_val
+            }
+        }
+    }
+
+    Ok(max_cal)
+}
+
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
