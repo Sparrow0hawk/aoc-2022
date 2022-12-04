@@ -45,9 +45,8 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
     Ok(())
 }
 
-pub fn solve_one() -> Result<i32, anyhow::Error> {
-    let mut max_cal: i32 = 0;
-
+pub fn solve_one() -> Result<Vec<i32>, anyhow::Error> {
+    let mut cal_vec: Vec<i32> = Vec::new();
     let mut elf_cal = 0;
 
     if let Ok(lines) = read_lines("data/task_1") {
@@ -55,9 +54,7 @@ pub fn solve_one() -> Result<i32, anyhow::Error> {
             let line = line.unwrap();
 
             if line.is_empty() {
-                if elf_cal > max_cal {
-                    max_cal = elf_cal;
-                }
+                cal_vec.push(elf_cal);
                 elf_cal = 0;
             } else {
                 let line_val = line.parse::<i32>().unwrap();
@@ -67,7 +64,7 @@ pub fn solve_one() -> Result<i32, anyhow::Error> {
         }
     }
 
-    Ok(max_cal)
+    Ok(cal_vec)
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>

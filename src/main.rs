@@ -19,8 +19,16 @@ fn main() {
 
     match args.task {
         1 => {
-            let answer = solve_one().unwrap();
-            println!("Max calories in the file is {}", answer)
+            let mut answer = solve_one().unwrap();
+            println!(
+                "The answer to part 1 is: {:?}",
+                answer.iter().max().unwrap()
+            );
+            answer.sort_by(|a, b| b.cmp(a));
+            println!(
+                "The answer to part 2 is: {:?}",
+                &answer[0..=2].iter().sum::<i32>()
+            )
         }
         _ => println!("Not sure what task you're doing!"),
     }
