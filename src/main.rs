@@ -1,6 +1,8 @@
 use aoc_2022::{download_file, solve_one};
 use clap::Parser;
 
+mod two;
+
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
