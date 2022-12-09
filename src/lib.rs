@@ -67,7 +67,7 @@ pub fn solve_one() -> Result<Vec<i32>, anyhow::Error> {
     Ok(cal_vec)
 }
 
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
     P: AsRef<Path>,
 {

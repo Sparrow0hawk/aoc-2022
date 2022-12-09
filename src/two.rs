@@ -1,4 +1,5 @@
 use anyhow;
+use aoc_2022::read_lines;
 
 pub enum GameResult {
     Win(i32),
@@ -42,6 +43,14 @@ pub struct RockPaperScissors {
     player1: String,
     player2: String,
 }
+
+impl RockPaperScissors {
+    fn new(player1: String, player2: String) -> RockPaperScissors {
+        RockPaperScissors { player1, player2 }
+    }
+}
+
+fn play(game: RockPaperScissors)
 
 #[cfg(test)]
 mod tests {
