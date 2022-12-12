@@ -28,6 +28,20 @@ pub trait Winner {
     fn winner(&self) -> Self;
 }
 
+pub trait Score {
+    fn score(&self) -> i32;
+}
+
+impl Score for Choice {
+    fn score(&self) -> i32 {
+        match self {
+            Choice::Rock => 1,
+            Choice::Paper => 2,
+            Choice::Scissors => 3
+        }
+    }
+}
+
 impl Winner for Choice {
     fn winner(&self) -> Self {
         match *self {
@@ -38,9 +52,38 @@ impl Winner for Choice {
     }
 }
 
+#[derive(PartialEq, Debug)]
 pub struct RockPaperScissors {
-    player1: String,
-    player2: String,
+    player1: Choice,
+    player2: Choice,
+}
+
+impl RockPaperScissors {
+
+    fn new(player1: &str, player2: &str) -> Result<RockPaperScissors, anyhow::Error> {
+        let p1 = make_choice(player1)?;
+        let p2 = make_choice(player2)?;
+
+        Ok(RockPaperScissors { player1: p1, player2: p2 })
+    }
+
+    fn game<'a>(mut split: impl Iterator<Item = &'a str>) -> Result<i32, anyhow::Error> {
+
+        let p1 = match split.next() {
+            Some(split) => split,
+            None => return anyhow::error::Error
+        };
+
+        let p2 = match split.next() {
+            Some(split) => split,
+            None => return Err("No value for player 2 found.")
+        };
+
+        let game = RockPaperScissors::new(p1, p2)?;
+
+        Ok(10)
+
+    }
 }
 
 #[cfg(test)]
@@ -51,5 +94,13 @@ mod tests {
     #[test]
     fn test_make_choice() {
         assert_eq!(make_choice("A").unwrap(), Rock)
+    }
+
+    #[test]
+    fn test_new_rockpaperscissors() {
+
+        let game = RockPaperScissors::new("A","Y").unwrap();
+
+        assert_eq!(game, RockPaperScissors{ player1: Choice::Rock, player2: Choice::Paper})
     }
 }
