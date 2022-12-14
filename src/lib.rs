@@ -28,7 +28,12 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
 
         let fname = data_dir.join(fname);
 
-        fs::File::create(fname)?
+        if fname.exists() {
+            println!("{:?} file already exists.", fname);
+            return Ok(());
+        } else {
+            fs::File::create(fname)?
+        }
     };
 
     let env_var = env::var("COOKIE")?;
@@ -43,28 +48,6 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
     io::copy(&mut content.text()?.as_bytes(), &mut dest)?;
 
     Ok(())
-}
-
-pub fn solve_one() -> Result<Vec<i32>, anyhow::Error> {
-    let mut cal_vec: Vec<i32> = Vec::new();
-    let mut elf_cal = 0;
-
-    if let Ok(lines) = read_lines("data/task_1") {
-        for line in lines {
-            let line = line.unwrap();
-
-            if line.is_empty() {
-                cal_vec.push(elf_cal);
-                elf_cal = 0;
-            } else {
-                let line_val = line.parse::<i32>().unwrap();
-
-                elf_cal = elf_cal + line_val
-            }
-        }
-    }
-
-    Ok(cal_vec)
 }
 
 pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
