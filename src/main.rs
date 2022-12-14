@@ -1,5 +1,7 @@
-use aoc_2022::{download_file, solve_one};
+use aoc_2022::download_file;
 use clap::Parser;
+
+mod one;
 
 mod two;
 
@@ -21,7 +23,7 @@ fn main() {
 
     match args.task {
         1 => {
-            let mut answer = solve_one().unwrap();
+            let mut answer = one::solve_one().unwrap();
             println!(
                 "The answer to part 1 is: {:?}",
                 answer.iter().max().unwrap()
