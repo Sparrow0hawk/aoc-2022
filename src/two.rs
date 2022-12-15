@@ -18,6 +18,30 @@ pub trait Winner {
     fn winner(&self) -> Choice;
 }
 
+pub trait Score {
+    fn score(&self) -> i64;
+}
+
+impl Score for Choice {
+    fn score(&self) -> i64 {
+        match self {
+            Self::Paper => 2,
+            Self::Rock => 1,
+            Self::Scissors => 3,
+        }
+    }
+}
+
+impl Score for Outcome {
+    fn score(&self) -> i64 {
+        match self {
+            Self::Draw => 3,
+            Self::Lose => 0,
+            Self::Win => 6,
+        }
+    }
+}
+
 impl Winner for Choice {
     fn winner(&self) -> Choice {
         match self {
@@ -55,9 +79,13 @@ impl Game {
             _ => Outcome::Draw,
         }
     }
+
+    fn get_score(&self) -> i64 {
+        self.ours.score() + self.find_winner().score()
+    }
 }
 
-pub fn match_hands(mut line: Split<&str>) -> Result<Outcome, &'static str> {
+pub fn match_hands(mut line: Split<&str>) -> Result<i64, &'static str> {
     let p1 = match line.next() {
         Some(line) => line,
         None => return Err("No choice for player 1"),
@@ -73,5 +101,5 @@ pub fn match_hands(mut line: Split<&str>) -> Result<Outcome, &'static str> {
         theirs: Choice::convert(p1)?,
     };
 
-    Ok(round.find_winner())
+    Ok(round.get_score())
 }
