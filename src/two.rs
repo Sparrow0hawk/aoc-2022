@@ -45,9 +45,9 @@ impl Score for Outcome {
 impl Winner for Choice {
     fn winner(&self) -> Choice {
         match self {
-            Self::Rock => Choice::Paper,
-            Self::Paper => Choice::Scissors,
-            Self::Scissors => Choice::Rock,
+            Self::Paper => Choice::Rock,
+            Self::Scissors => Choice::Paper,
+            Self::Rock => Choice::Scissors,
         }
     }
 }
