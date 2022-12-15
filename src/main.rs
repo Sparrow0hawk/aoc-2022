@@ -1,9 +1,10 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
 use std::io::BufRead;
+use two::match_hands;
 
 mod one;
-
+mod two;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {
@@ -39,7 +40,7 @@ fn main() {
                 read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
 
             for line in open_file.lines() {
-                println!("{:?}", line.unwrap())
+                println!("{:?}", match_hands(line.unwrap().split(" ")))
             }
         }
 

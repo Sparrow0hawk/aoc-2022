@@ -1,64 +1,44 @@
-use anyhow;
-use aoc_2022::read_lines;
+use std::str::Split;
 
-pub enum GameResult {
-    Win(i32),
-    Lose(i32),
-    Draw(i32),
-}
-
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub enum Choice {
     Rock,
     Paper,
     Scissors,
 }
 
-pub fn make_choice(choice: &str) -> Result<Choice, anyhow::Error> {
-    let choice_out = match choice {
-        "A" | "X" => Choice::Rock,
-        "B" | "Y" => Choice::Paper,
-        "C" | "Z" => Choice::Scissors,
-        _ => panic!("Invalid choice!"),
-    };
-
-    Ok(choice_out)
-}
-
-pub trait Winner {
-    fn winner(&self) -> Self;
-}
-
-impl Winner for Choice {
-    fn winner(&self) -> Self {
-        match *self {
-            Choice::Rock => Choice::Scissors,
-            Choice::Paper => Choice::Rock,
-            Choice::Scissors => Choice::Paper,
+impl Choice {
+    fn convert(s: &str) -> Result<Self, &'static str> {
+        match s {
+            "A" | "X" => Ok(Choice::Rock),
+            "B" | "Y" => Ok(Choice::Paper),
+            "C" | "Z" => Ok(Choice::Scissors),
+            _ => return Err("Not a valid choice: {s:?}"),
         }
     }
 }
 
-pub struct RockPaperScissors {
-    player1: String,
-    player2: String,
+#[derive(Debug, PartialEq)]
+pub struct Game {
+    ours: Choice,
+    theirs: Choice,
 }
 
-impl RockPaperScissors {
-    fn new(player1: String, player2: String) -> RockPaperScissors {
-        RockPaperScissors { player1, player2 }
-    }
-}
+pub fn match_hands(mut line: Split<&str>) -> Result<Game, &'static str> {
+    let p1 = match line.next() {
+        Some(line) => line,
+        None => return Err("No choice for player 1"),
+    };
 
-fn play(game: RockPaperScissors)
+    let p2 = match line.next() {
+        Some(line) => line,
+        None => return Err("No choice for player 2"),
+    };
 
-#[cfg(test)]
-mod tests {
-    use super::Choice::*;
-    use super::*;
+    let round = Game {
+        ours: Choice::convert(p2)?,
+        theirs: Choice::convert(p1)?,
+    };
 
-    #[test]
-    fn test_make_choice() {
-        assert_eq!(make_choice("A").unwrap(), Rock)
-    }
+    Ok(round)
 }
