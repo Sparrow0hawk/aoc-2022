@@ -39,9 +39,13 @@ fn main() {
             let open_file =
                 read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
 
-            for line in open_file.lines() {
-                println!("{:?}", match_hands(line.unwrap().split(" ")))
-            }
+            let score: i64 = open_file
+                .lines()
+                .into_iter()
+                .map(|line| match_hands(line.unwrap().split(" ")).unwrap())
+                .sum();
+
+            println!("Total score for strategy is: {:?}", score);
         }
 
         _ => println!("Not sure what task you're doing!"),
