@@ -1,9 +1,8 @@
-use aoc_2022::download_file;
+use aoc_2022::{download_file, read_file};
 use clap::Parser;
+use std::io::BufRead;
 
 mod one;
-
-mod two;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -34,6 +33,16 @@ fn main() {
                 &answer[0..=2].iter().sum::<i32>()
             )
         }
+
+        2 => {
+            let open_file =
+                read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
+
+            for line in open_file.lines() {
+                println!("{:?}", line.unwrap())
+            }
+        }
+
         _ => println!("Not sure what task you're doing!"),
     }
 }
