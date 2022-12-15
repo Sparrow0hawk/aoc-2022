@@ -58,3 +58,11 @@ where
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
+
+pub fn read_file<P>(filename: P) -> io::Result<io::BufReader<File>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file))
+}
