@@ -7,7 +7,7 @@ pub enum Choice {
     Scissors,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Outcome {
     Win,
     Lose,
@@ -16,6 +16,10 @@ pub enum Outcome {
 
 pub trait Winner {
     fn winner(&self) -> Choice;
+}
+
+pub trait Loser {
+    fn loser(&self) -> Choice;
 }
 
 pub trait Score {
@@ -52,6 +56,16 @@ impl Winner for Choice {
     }
 }
 
+impl Loser for Choice {
+    fn loser(&self) -> Choice {
+        match self {
+            Self::Rock => Choice::Paper,
+            Self::Paper => Choice::Scissors,
+            Self::Scissors => Choice::Rock,
+        }
+    }
+}
+
 impl Choice {
     fn convert(s: &str) -> Result<Self, &'static str> {
         match s {
@@ -60,6 +74,37 @@ impl Choice {
             "C" | "Z" => Ok(Choice::Scissors),
             _ => return Err("Not a valid choice: {s:?}"),
         }
+    }
+}
+
+impl Outcome {
+    fn convert(s: &str) -> Result<Self, &'static str> {
+        match s {
+            "X" => Ok(Outcome::Lose),
+            "Y" => Ok(Outcome::Draw),
+            "Z" => Ok(Outcome::Win),
+            _ => return Err("Not a valid outcome: {s:?}"),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct FixedGame {
+    expected_result: Outcome,
+    theirs: Choice,
+}
+
+impl FixedGame {
+    fn pick_winner(&self) -> Choice {
+        match self.expected_result {
+            Outcome::Win => self.theirs.loser(),
+            Outcome::Draw => self.theirs,
+            Outcome::Lose => self.theirs.winner(),
+        }
+    }
+
+    fn get_score(&self) -> i64 {
+        self.pick_winner().score() + self.expected_result.score()
     }
 }
 
@@ -98,6 +143,25 @@ pub fn match_hands(mut line: Split<&str>) -> Result<i64, &'static str> {
 
     let round = Game {
         ours: Choice::convert(p2)?,
+        theirs: Choice::convert(p1)?,
+    };
+
+    Ok(round.get_score())
+}
+
+pub fn pick_hands(mut line: Split<&str>) -> Result<i64, &'static str> {
+    let p1 = match line.next() {
+        Some(line) => line,
+        None => return Err("No choice for player 1"),
+    };
+
+    let p2 = match line.next() {
+        Some(line) => line,
+        None => return Err("No choice for player 2"),
+    };
+
+    let round = FixedGame {
+        expected_result: Outcome::convert(p2)?,
         theirs: Choice::convert(p1)?,
     };
 

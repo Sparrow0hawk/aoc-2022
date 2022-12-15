@@ -1,7 +1,7 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
 use std::io::BufRead;
-use two::match_hands;
+use two::{match_hands, pick_hands};
 
 mod one;
 mod two;
@@ -14,10 +14,6 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-
-    for _ in 0..args.task {
-        println!("This is an arg: {}", args.task)
-    }
 
     let _ = download_file(args.task);
 
@@ -45,7 +41,19 @@ fn main() {
                 .map(|line| match_hands(line.unwrap().split(" ")).unwrap())
                 .sum();
 
-            println!("Total score for strategy is: {:?}", score);
+            println!("Answer for task 2 is: {:?}", score);
+        }
+        21 => {
+            let open_file =
+                read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
+
+            let score: i64 = open_file
+                .lines()
+                .into_iter()
+                .map(|line| pick_hands(line.unwrap().split(" ")).unwrap())
+                .sum();
+
+            println!("Answer for task 2, part 2 is: {:?}", score);
         }
 
         _ => println!("Not sure what task you're doing!"),
