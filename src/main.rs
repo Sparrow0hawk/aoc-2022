@@ -1,9 +1,11 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
 use std::io::BufRead;
+use three::solve_three;
 use two::{match_hands, pick_hands};
 
 mod one;
+mod three;
 mod two;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -69,7 +71,14 @@ fn main() {
         },
 
         3 => match args.part {
-            1 => println!("Answer to task 3 part 1:"),
+            1 => {
+                let ans = open_file
+                    .lines()
+                    .into_iter()
+                    .map(|line| solve_three(line.unwrap()).unwrap());
+
+                println!("Answer to task 3 part 1: {:?}", ans)
+            }
             2 => println!("Answer to task 3 part 2:"),
             _ => println!("Invalid part"),
         },
