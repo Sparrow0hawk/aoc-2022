@@ -50,6 +50,7 @@ pub fn download_file(task: u8) -> Result<(), anyhow::Error> {
     Ok(())
 }
 
+// copied from https://doc.rust-lang.org/rust-by-example/std_misc/file/read_lines.html
 pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
     P: AsRef<Path>,
