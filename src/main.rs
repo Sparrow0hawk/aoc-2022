@@ -10,12 +10,19 @@ mod two;
 struct Args {
     #[arg(short, long)]
     task: u8,
+    #[arg(short, long)]
+    part: u8,
 }
 
 fn main() {
     let args = Args::parse();
 
     let _ = download_file(args.task);
+
+    let mut fname = String::from("data/task_");
+    fname.push_str(&args.task.to_string());
+
+    let open_file = read_file(fname).unwrap_or_else(|err| panic!("Error opening file: {err}"));
 
     match args.task {
         1 => {
@@ -31,30 +38,41 @@ fn main() {
             )
         }
 
-        2 => {
-            let open_file =
-                read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
+        2 => match args.part {
+            1 => {
+                let open_file = read_file("data/task_2")
+                    .unwrap_or_else(|err| panic!("Error opening file: {err}"));
 
-            let score: i64 = open_file
-                .lines()
-                .into_iter()
-                .map(|line| match_hands(line.unwrap().split(" ")).unwrap())
-                .sum();
+                let score: i64 = open_file
+                    .lines()
+                    .into_iter()
+                    .map(|line| match_hands(line.unwrap().split(" ")).unwrap())
+                    .sum();
 
-            println!("Answer for task 2 is: {:?}", score);
-        }
-        21 => {
-            let open_file =
-                read_file("data/task_2").unwrap_or_else(|err| panic!("Error opening file: {err}"));
+                println!("Answer for task 2 is: {:?}", score);
+            }
 
-            let score: i64 = open_file
-                .lines()
-                .into_iter()
-                .map(|line| pick_hands(line.unwrap().split(" ")).unwrap())
-                .sum();
+            2 => {
+                let open_file = read_file("data/task_2")
+                    .unwrap_or_else(|err| panic!("Error opening file: {err}"));
 
-            println!("Answer for task 2, part 2 is: {:?}", score);
-        }
+                let score: i64 = open_file
+                    .lines()
+                    .into_iter()
+                    .map(|line| pick_hands(line.unwrap().split(" ")).unwrap())
+                    .sum();
+
+                println!("Answer for task 2, part 2 is: {:?}", score);
+            }
+
+            _ => println!("Invalid part"),
+        },
+
+        3 => match args.part {
+            1 => println!("Answer to task 3 part 1:"),
+            2 => println!("Answer to task 3 part 2:"),
+            _ => println!("Invalid part"),
+        },
 
         _ => println!("Not sure what task you're doing!"),
     }
