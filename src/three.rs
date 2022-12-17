@@ -1,13 +1,13 @@
-use std::{collections::HashMap, hash::Hash};
+use std::collections::HashMap;
 #[derive(Debug)]
 pub struct Backpack {
     items: String,
-    length: Option<u8>,
+    length: Option<usize>,
     shared_item: Option<HashMap<char, i32>>,
 }
 
 pub trait Length {
-    fn get_length(&self) -> Option<u8>;
+    fn get_length(&self) -> usize;
 }
 
 pub trait SharedItem {
@@ -16,20 +16,19 @@ pub trait SharedItem {
 
 impl SharedItem for Backpack {
     fn get_shared(&self) -> HashMap<char, i32> {
-        let mut char_count = HashMap::new();
+        let mut char_count: HashMap<char, i32> = HashMap::new();
 
-        self.items
-            .chars()
-            .into_iter()
-            .map(|c| char_count.entry(c).and_modify(|c| *c += 1).or_insert(1));
+        for ch in self.items.chars() {
+            char_count.entry(ch).and_modify(|c| *c += 1).or_insert(1);
+        }
 
         char_count
     }
 }
 
 impl Length for Backpack {
-    fn get_length(&self) -> Option<u8> {
-        Some(self.items.chars().count())
+    fn get_length(&self) -> usize {
+        self.items.chars().count()
     }
 }
 
@@ -41,9 +40,9 @@ impl Backpack {
             shared_item: None,
         };
 
-        pack.length = pack.get_length();
+        pack.length = Some(pack.get_length());
 
-        pack.shared_item = pack.get_shared();
+        pack.shared_item = Some(pack.get_shared());
 
         Ok(pack)
     }
@@ -52,5 +51,21 @@ impl Backpack {
 pub fn solve_three(line: String) -> Result<Backpack, &'static str> {
     let pack = Backpack::new(line)?;
 
+    println!("{:?}", pack.items);
     Ok(pack)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn new_pack() {
+        let line = String::from("aaBBcc");
+
+        let pack = Backpack::new(line).unwrap();
+
+        assert_eq!(pack.items, String::from("aaBBcc"));
+        assert_eq!(pack.length, Some(6));
+    }
 }
