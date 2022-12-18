@@ -91,7 +91,8 @@ fn count_letter(s: char) -> Result<usize, &'static str> {
 pub fn solve_three(line: String) -> Result<usize, &'static str> {
     let pack = Backpack::new(line)?;
 
-    println!("{:?}", pack.get_priority().unwrap());
+    // debug print line
+    //println!("{:?}", pack.get_priority().unwrap());
     pack.get_priority()
 }
 
