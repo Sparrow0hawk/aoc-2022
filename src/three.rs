@@ -62,7 +62,14 @@ impl Backpack {
     }
 
     fn get_priority(&self) -> Result<usize, &'static str> {
-        let priority = count_letter(self.shared_item.unwrap())?;
+        let (comp1, comp2) = self.items.split_at(self.length.unwrap() / 2);
+
+        let out = comp1
+            .to_string()
+            .chars()
+            .find_map(|item| comp2.to_string().chars().find(|&s_item| s_item == item));
+
+        let priority = count_letter(out.unwrap())?;
 
         Ok(priority)
     }
