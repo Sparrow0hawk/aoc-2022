@@ -1,4 +1,10 @@
 use std::collections::HashMap;
+
+static ALPHABET_LOWER: [char; 26] = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+    't', 'u', 'v', 'w', 'x', 'y', 'z',
+];
+
 #[derive(Debug)]
 pub struct Backpack {
     items: String,
@@ -55,6 +61,18 @@ impl Backpack {
         Ok(pack)
     }
 }
+fn count_letter(s: char) -> Option<usize> {
+    for (idx, lt) in ALPHABET_LOWER.iter().enumerate() {
+        if s.eq_ignore_ascii_case(lt) {
+            return Some(if s.is_uppercase() {
+                idx + 1 + 26
+            } else {
+                idx + 1
+            });
+        }
+    }
+    None
+}
 
 pub fn solve_three(line: String) -> Result<Backpack, &'static str> {
     let pack = Backpack::new(line)?;
@@ -75,5 +93,18 @@ mod tests {
 
         assert_eq!(pack.items, String::from("aaBBcc"));
         assert_eq!(pack.length, Some(6));
+    }
+
+    #[test]
+    fn test_count_letter_lower() {
+        let lt_a: char = 'a';
+
+        assert_eq!(count_letter(lt_a).unwrap(), 1);
+    }
+    #[test]
+    fn test_count_letter_upper() {
+        let lt_Z: char = 'Z';
+
+        assert_eq!(count_letter(lt_Z).unwrap(), 52);
     }
 }
