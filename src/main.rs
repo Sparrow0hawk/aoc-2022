@@ -72,13 +72,13 @@ fn main() {
 
         3 => match args.part {
             1 => {
-                let ans: Vec<three::Backpack> = open_file
+                let ans: usize = open_file
                     .lines()
                     .into_iter()
                     .map(|line| solve_three(line.unwrap()).unwrap())
-                    .collect();
+                    .sum();
 
-                //println!("Answer to task 3 part 1: {:?}", ans)
+                println!("Answer to task 3 part 1: {:?}", ans)
             }
             2 => println!("Answer to task 3 part 2:"),
             _ => println!("Invalid part"),

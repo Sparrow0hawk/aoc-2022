@@ -60,25 +60,32 @@ impl Backpack {
 
         Ok(pack)
     }
+
+    fn get_priority(&self) -> Result<usize, &'static str> {
+        let priority = count_letter(self.shared_item.unwrap())?;
+
+        Ok(priority)
+    }
 }
-fn count_letter(s: char) -> Option<usize> {
+
+fn count_letter(s: char) -> Result<usize, &'static str> {
     for (idx, lt) in ALPHABET_LOWER.iter().enumerate() {
         if s.eq_ignore_ascii_case(lt) {
-            return Some(if s.is_uppercase() {
+            return Ok(if s.is_uppercase() {
                 idx + 1 + 26
             } else {
                 idx + 1
             });
         }
     }
-    None
+    Err("Couldn't get the index of the letter passed")
 }
 
-pub fn solve_three(line: String) -> Result<Backpack, &'static str> {
+pub fn solve_three(line: String) -> Result<usize, &'static str> {
     let pack = Backpack::new(line)?;
 
-    println!("{:?}", pack.shared_item);
-    Ok(pack)
+    println!("{:?}", pack.get_priority().unwrap());
+    pack.get_priority()
 }
 
 #[cfg(test)]
