@@ -73,7 +73,7 @@ mod tests {
 
         let pack = Backpack::new(line).unwrap();
 
-        assert_eq!(pack.items, line);
+        assert_eq!(pack.items, String::from("aaBBcc"));
         assert_eq!(pack.length, Some(6));
     }
 }
