@@ -1,13 +1,18 @@
-fn find_overlap(line: &str) -> Result<Vec<String>, &'static str> {
+fn find_overlap(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
     let parts = line
         .split(",")
-        .map(|f| f.to_string())
-        .collect::<Vec<String>>();
+        .map(|f| {
+            f.to_string()
+                .split("-")
+                .map(|item| item.to_string().parse::<i64>().unwrap())
+                .collect()
+        })
+        .collect::<Vec<Vec<i64>>>();
 
     Ok(parts)
 }
 
-pub fn solve_four_one(line: &str) -> Result<Vec<String>, &'static str> {
+pub fn solve_four_one(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
     find_overlap(line)
 }
 
