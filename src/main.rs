@@ -1,9 +1,11 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
+use four::solve_four_one;
 use std::io::BufRead;
 use three::{solve_three, solve_three_two};
 use two::{match_hands, pick_hands};
 
+mod four;
 mod one;
 mod three;
 mod two;
@@ -86,6 +88,20 @@ fn main() {
                 println!("Answer to task 3 part 2: {:?}", ans)
             }
             _ => println!("Invalid part"),
+        },
+
+        4 => match args.part {
+            1 => {
+                let ans: Vec<_> = open_file
+                    .lines()
+                    .into_iter()
+                    .map(|f| solve_four_one(f.unwrap().as_str()).unwrap())
+                    .collect();
+
+                println!("Answer to day 4, part 1 is: {:?}", ans)
+            }
+
+            _ => println!("Invalid part!"),
         },
 
         _ => println!("Not sure what task you're doing!"),
