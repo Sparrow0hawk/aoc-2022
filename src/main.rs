@@ -1,7 +1,7 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
 use std::io::BufRead;
-use three::solve_three;
+use three::{solve_three, solve_three_two};
 use two::{match_hands, pick_hands};
 
 mod one;
@@ -80,7 +80,11 @@ fn main() {
 
                 println!("Answer to task 3 part 1: {:?}", ans)
             }
-            2 => println!("Answer to task 3 part 2:"),
+            2 => {
+                let ans: usize = solve_three_two(open_file);
+
+                println!("Answer to task 3 part 2: {:?}", ans)
+            }
             _ => println!("Invalid part"),
         },
 

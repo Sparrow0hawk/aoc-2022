@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fs::File, io::BufRead, io::BufReader};
 
 static ALPHABET_LOWER: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -90,6 +90,26 @@ fn count_letter(s: char) -> Result<usize, &'static str> {
         }
     }
     Err("Couldn't get the index of the letter passed")
+}
+
+pub fn solve_three_two(file: BufReader<File>) -> usize {
+    let out = file
+        .lines()
+        .into_iter()
+        .map(|x| x.unwrap())
+        .collect::<Vec<String>>()
+        .chunks(3)
+        .map(|item| {
+            item[0]
+                .chars()
+                .into_iter()
+                .find(|c| item[1].contains(*c) && item[2].contains(*c))
+                .unwrap()
+        })
+        .map(|x| count_letter(x).unwrap())
+        .sum();
+
+    out
 }
 
 pub fn solve_three(line: String) -> Result<usize, &'static str> {
