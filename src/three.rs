@@ -24,13 +24,8 @@ impl SharedItem for Backpack {
     fn get_shared(&self) -> char {
         // Find the duplicate letter in the pack
         // not super happy with this function as it doesn't handle error cases at all
-        let mut char_count: HashMap<char, i32> = HashMap::new();
-
-        for ch in self.items.chars() {
-            char_count.entry(ch).and_modify(|c| *c += 1).or_insert(1);
-        }
-
-        let dup = char_count
+        let dup = create_char_count(&self.items)
+            .unwrap()
             .into_iter()
             .max_by(|a, b| a.1.cmp(&b.1))
             .map(|(k, _v)| k)
@@ -38,6 +33,15 @@ impl SharedItem for Backpack {
 
         dup
     }
+}
+
+pub fn create_char_count(s: &str) -> Result<HashMap<char, i32>, &'static str> {
+    let mut char_count: HashMap<char, i32> = HashMap::new();
+
+    for ch in s.chars() {
+        char_count.entry(ch).and_modify(|c| *c += 1).or_insert(1);
+    }
+    Ok(char_count)
 }
 
 impl Length for Backpack {
@@ -121,5 +125,13 @@ mod tests {
         let lt_Z: char = 'Z';
 
         assert_eq!(count_letter(lt_Z).unwrap(), 52);
+    }
+    #[test]
+    fn test_create_char_count() {
+        let foo = "aabC";
+
+        let result = create_char_count(foo).unwrap();
+
+        assert_eq!(result, HashMap::from([('a', 2), ('b', 1), ('C', 1)]))
     }
 }
