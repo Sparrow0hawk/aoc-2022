@@ -1,19 +1,45 @@
-fn find_overlap(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
-    let parts = line
-        .split(",")
-        .map(|f| {
-            f.to_string()
-                .split("-")
-                .map(|item| item.to_string().parse::<i64>().unwrap())
-                .collect()
-        })
-        .collect::<Vec<Vec<i64>>>();
-
-    Ok(parts)
+#[derive(Debug)]
+pub struct ElfPair {
+    elf1: Vec<i64>,
+    elf2: Vec<i64>,
 }
 
-pub fn solve_four_one(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
-    find_overlap(line)
+impl ElfPair {
+    pub fn new(line: &str) -> Result<ElfPair, &'static str> {
+        let mut split_line = line.split(",");
+
+        let elf1: Vec<i64> = match split_line.next() {
+            Some(line) => line
+                .to_string()
+                .split("-")
+                .map(|i| i.to_string().parse::<i64>().unwrap())
+                .collect(),
+            _ => return Err("Could no parse line!"),
+        };
+
+        let elf2: Vec<i64> = match split_line.next() {
+            Some(line) => line
+                .to_string()
+                .split("-")
+                .map(|i| i.to_string().parse::<i64>().unwrap())
+                .collect(),
+            _ => return Err("Could no parse line!"),
+        };
+
+        let pair = ElfPair { elf1, elf2 };
+
+        Ok(pair)
+    }
+}
+
+// fn find_overlap(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
+//     Ok(parts)
+// }
+
+pub fn solve_four_one(line: &str) -> Result<ElfPair, &'static str> {
+    let pair = ElfPair::new(line)?;
+
+    Ok(pair)
 }
 
 #[cfg(test)]
