@@ -92,11 +92,19 @@ fn main() {
 
         4 => match args.part {
             1 => {
-                let ans: Vec<_> = open_file
+                let ans: i32 = open_file
                     .lines()
                     .into_iter()
-                    .map(|f| solve_four_one(f.unwrap().as_str()).unwrap())
-                    .collect();
+                    .map(|f| {
+                        let val = solve_four_one(f.unwrap().as_str()).unwrap();
+
+                        if val {
+                            1
+                        } else {
+                            0
+                        }
+                    })
+                    .sum::<i32>();
 
                 println!("Answer to day 4, part 1 is: {:?}", ans)
             }

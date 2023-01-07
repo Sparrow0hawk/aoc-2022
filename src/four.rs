@@ -40,20 +40,20 @@ impl ElfPair {
         if elf1.start() <= elf2.start() && elf1.end() >= elf2.end()
             || elf2.start() <= elf1.start() && elf2.end() >= elf1.end()
         {
-            println!(
-                "Fully contained overlap! {:?}-{:?}, {:?}-{:?}",
-                self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
-            );
+            // println!(
+            //     "Fully contained overlap! {:?}-{:?}, {:?}-{:?}",
+            //     self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
+            // );
             return true;
         } else if elf1.contains(&elf2.start())
             || elf1.contains(&elf2.end())
             || elf2.contains(&elf1.start())
             || elf2.contains(elf1.end())
         {
-            println!(
-                "Overlap! {:?}-{:?}, {:?}-{:?}",
-                self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
-            );
+            // println!(
+            //     "Overlap! {:?}-{:?}, {:?}-{:?}",
+            //     self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
+            // );
             return false;
         } else {
             return false;
