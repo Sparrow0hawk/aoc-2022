@@ -30,16 +30,41 @@ impl ElfPair {
 
         Ok(pair)
     }
+
+    fn find_overlap(&self) -> bool {
+        // implementation inspired by https://github.com/aaronblohowiak/advent-of-code-2022/blob/main/four/src/main.rs
+        // RangeInclusive works nicely here
+        let elf1 = std::ops::RangeInclusive::new(self.elf1[0], self.elf1[1]);
+        let elf2 = std::ops::RangeInclusive::new(self.elf2[0], self.elf2[1]);
+
+        if elf1.start() <= elf2.start() && elf1.end() >= elf2.end()
+            || elf2.start() <= elf1.start() && elf2.end() >= elf1.end()
+        {
+            println!(
+                "Fully contained overlap! {:?}-{:?}, {:?}-{:?}",
+                self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
+            );
+            return true;
+        } else if elf1.contains(&elf2.start())
+            || elf1.contains(&elf2.end())
+            || elf2.contains(&elf1.start())
+            || elf2.contains(elf1.end())
+        {
+            println!(
+                "Overlap! {:?}-{:?}, {:?}-{:?}",
+                self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
+            );
+            return false;
+        } else {
+            return false;
+        }
+    }
 }
 
-// fn find_overlap(line: &str) -> Result<Vec<Vec<i64>>, &'static str> {
-//     Ok(parts)
-// }
-
-pub fn solve_four_one(line: &str) -> Result<ElfPair, &'static str> {
+pub fn solve_four_one(line: &str) -> Result<bool, &'static str> {
     let pair = ElfPair::new(line)?;
 
-    Ok(pair)
+    Ok(pair.find_overlap())
 }
 
 #[cfg(test)]
@@ -50,17 +75,32 @@ mod tests {
     fn test_find_overlap_no() {
         let input = "1-5,6-9";
 
-        let res = find_overlap(input).unwrap();
+        let test_elf = ElfPair::new(input).unwrap();
 
-        assert_eq!(res, 0)
+        let res = test_elf.find_overlap();
+
+        assert_eq!(res, false)
     }
 
     #[test]
-    fn test_find_overlap_yes() {
-        let input = "2-4,1-4";
+    fn test_find_overlap_partial() {
+        let input = "2-5,1-4";
 
-        let res = find_overlap(input).unwrap();
+        let test_elf = ElfPair::new(input).unwrap();
 
-        assert_eq!(res, 3)
+        let res = test_elf.find_overlap();
+
+        assert_eq!(res, false)
+    }
+
+    #[test]
+    fn test_find_overlap_full() {
+        let input = "14-88,3-99";
+
+        let test_elf = ElfPair::new(input).unwrap();
+
+        let res = test_elf.find_overlap();
+
+        assert_eq!(res, true)
     }
 }
