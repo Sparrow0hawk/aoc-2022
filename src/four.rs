@@ -4,6 +4,13 @@ pub struct ElfPair {
     elf2: Vec<i64>,
 }
 
+#[derive(PartialEq, Eq, Debug)]
+pub enum Match {
+    Full,
+    Partial,
+    None,
+}
+
 impl ElfPair {
     pub fn new(line: &str) -> Result<ElfPair, &'static str> {
         let mut split_line = line.split(",");
@@ -31,7 +38,7 @@ impl ElfPair {
         Ok(pair)
     }
 
-    fn find_overlap(&self) -> bool {
+    fn find_overlap(&self) -> Match {
         // implementation inspired by https://github.com/aaronblohowiak/advent-of-code-2022/blob/main/four/src/main.rs
         // RangeInclusive works nicely here
         let elf1 = std::ops::RangeInclusive::new(self.elf1[0], self.elf1[1]);
@@ -44,7 +51,7 @@ impl ElfPair {
             //     "Fully contained overlap! {:?}-{:?}, {:?}-{:?}",
             //     self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
             // );
-            return true;
+            return Match::Full;
         } else if elf1.contains(&elf2.start())
             || elf1.contains(&elf2.end())
             || elf2.contains(&elf1.start())
@@ -54,14 +61,14 @@ impl ElfPair {
             //     "Overlap! {:?}-{:?}, {:?}-{:?}",
             //     self.elf1[0], self.elf1[1], self.elf2[0], self.elf2[1]
             // );
-            return false;
+            return Match::Partial;
         } else {
-            return false;
+            return Match::None;
         }
     }
 }
 
-pub fn solve_four_one(line: &str) -> Result<bool, &'static str> {
+pub fn solve_four_one(line: &str) -> Result<Match, &'static str> {
     let pair = ElfPair::new(line)?;
 
     Ok(pair.find_overlap())
@@ -79,7 +86,7 @@ mod tests {
 
         let res = test_elf.find_overlap();
 
-        assert_eq!(res, false)
+        assert_eq!(res, Match::None)
     }
 
     #[test]
@@ -90,7 +97,7 @@ mod tests {
 
         let res = test_elf.find_overlap();
 
-        assert_eq!(res, false)
+        assert_eq!(res, Match::Partial)
     }
 
     #[test]
@@ -101,6 +108,6 @@ mod tests {
 
         let res = test_elf.find_overlap();
 
-        assert_eq!(res, true)
+        assert_eq!(res, Match::Full)
     }
 }

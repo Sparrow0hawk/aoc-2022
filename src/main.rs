@@ -1,6 +1,6 @@
 use aoc_2022::{download_file, read_file};
 use clap::Parser;
-use four::solve_four_one;
+use four::{solve_four_one, Match};
 use std::io::BufRead;
 use three::{solve_three, solve_three_two};
 use two::{match_hands, pick_hands};
@@ -98,7 +98,25 @@ fn main() {
                     .map(|f| {
                         let val = solve_four_one(f.unwrap().as_str()).unwrap();
 
-                        if val {
+                        if val == Match::Full {
+                            1
+                        } else {
+                            0
+                        }
+                    })
+                    .sum::<i32>();
+
+                println!("Answer to day 4, part 1 is: {:?}", ans)
+            }
+
+            2 => {
+                let ans: i32 = open_file
+                    .lines()
+                    .into_iter()
+                    .map(|f| {
+                        let val = solve_four_one(f.unwrap().as_str()).unwrap();
+
+                        if val == Match::Full || val == Match::Partial {
                             1
                         } else {
                             0
